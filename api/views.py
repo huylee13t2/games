@@ -12,6 +12,60 @@ from api.models import Profile, Question, Answer, Score
 def main(request):
 	return render(request, 'main.html', {})
 
+
+@csrf_exempt
+def profile_updated(request):
+	token = request.POST.get('token')
+	fullname = request.POST.get('fullname')
+	gender = request.POST.get('gender')
+	phone = request.POST.get('phone')
+	city = request.POST.get('city')
+	avatar = request.FILES.get('avatar')
+
+	print('============')
+	print(avatar)
+
+	profile = Profile.objects.get(token=token)
+	profile.fullname = fullname
+	profile.gender = gender
+	profile.phone = phone
+	profile.city = city
+	if avatar != None:
+		profile.avatar = avatar
+
+	profile.save()
+
+	print('===> save')
+
+	response = {
+		'result' : profile.id,
+	}
+
+	return JsonResponse(response)
+
+
+@csrf_exempt
+def history(request):
+	token = request.POST.get('token')
+
+	profile = Profile.objects.get(token=token)
+
+	list_score = Score.objects.filter(user=profile.user).order_by('-updated')[:10]
+	history = []
+	for obj in list_score:
+		history.append({
+			'score' : obj.score,
+			'updated' : obj.updated
+		})
+
+	response = {
+		'result' : 1,
+		'data' : history
+	}
+
+	return JsonResponse(response)
+
+
 def get_profile(request):
 	print('====> get_profile')
 	id_profile = request.GET.get('id')
@@ -59,7 +113,7 @@ def get_account(request):
 
 def top_score(request):
 
-	scores = Score.objects.all().order_by('-score')[:5]
+	scores = Score.objects.all().order_by('-score', '-updated')[:6]
 	list_top = []
 	for obj in scores:
 		profile = Profile.objects.get(user=obj.user)
@@ -86,36 +140,42 @@ def answer(request):
 	event_play = request.POST.get('event_play')
 
 	profile = Profile.objects.get(token = token)
+	print(profile)
 	question = Question.objects.get(id =id_question)
 
-
-	# check answer question
-	check_answer = Answer.objects.filter(Q(question=question) & Q(user=profile.user))
-	print(check_answer)
-	if len(check_answer) == 0:
-		if answer_question == 'true':
-			answer = Answer(user=profile.user, question=question, answer=True, play=1)
-		else:
-			answer = Answer(user=profile.user, question=question, answer=False, play=1)
-
-		answer.save()
-		print('===> save')
-	else:
-		if answer_question == 'true':
-			answer = Answer(user=profile.user, question=question, answer=True, play=(len(check_answer) +1))
-		else:
-			answer = Answer(user=profile.user, question=question, answer=False, play=(len(check_answer) +1))
-		
-		answer.save()
-
 	if event_play == 'new_play':
-		# add score
-		# check_play = Score.objects.filter(user=profile.user)
-		
-		score = Score(user=profile.user, play=answer.play)
-		score.save()
+		check_answer = Answer.objects.filter(user=profile.user).order_by('-updated')[:1]
+		if len(check_answer) == 0:
+			play = 1
+		else:
+			play = check_answer[0].play + 1
 		if answer_question == 'true':
-			score.score = 10
+			answer = Answer(user=profile.user, question=question, answer=True, play=play)
+			score = Score(user=profile.user, score=10, play=play)
+		else:
+			answer = Answer(user=profile.user, question=question, answer=False, play=play)
+			score = Score(user=profile.user, score=0, play=play)
+
+		answer.save()
+		score.save()
+
+		response = {
+			'result' : score.score,
+			'data' : {
+				'score' : score.score
+			}
+		}
+
+	else:
+		check_answer = Answer.objects.filter(user=profile.user).order_by('-updated')[:1]
+		check_score = Score.objects.filter(Q(user=profile.user) & Q(play=check_answer[0].play))
+		score = check_score[0].score
+		if answer_question == 'true':
+			answer = Answer(user=profile.user, question=question, answer=True, play=check_answer[0].play)
+			answer.save()
+
+			score = Score.objects.get(id=check_score[0].id)
+			score.score = score.score + 10
 			score.save()
 
 			response = {
@@ -124,42 +184,21 @@ def answer(request):
 					'score' : score.score
 				}
 			}
+
 		else:
-			score.score = 0
-			score.save()
+			answer = Answer(user=profile.user, question=question, answer=False, play=check_answer[0].play)
+			check_score[0].score = check_score[0].score + 10
+			answer.save()
+			check_score[0].save()
 
 			response = {
 				'result' : 0,
 				'data' : {
-					'score' : score.score
-				}
-			}
-	else:
-		score = Score.objects.filter(Q(user=profile.user) & Q(play=answer.play))
-		print('=====')
-		print(score)
-		print(score[0])
-
-		if answer_question == 'true':
-			score[0].score = score[0].score + 10
-			score[0].save()
-
-			response = {
-				'result' : score[0].id,
-				'data' : {
-					'score' : score[0].score
-				}
-			}
-		else:
-			response = {
-				'result' : 0,
-				'data' : {
-					'score' : score[0].score
+					'score' : check_score[0].score
 				}
 			}
 
 	return JsonResponse(response)
-
 
 
 def get_question(request):

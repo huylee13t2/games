@@ -13,5 +13,7 @@ urlpatterns = [
     url(r'^api/top-score$', views.top_score, name='top_score'),
     url(r'^api/get-account$', views.get_account, name='get_account'),
     url(r'^api/get-profile$', views.get_profile, name='get_profile'),
+    url(r'^api/history$', views.history, name='history'),
+    url(r'^api/update-profile$', views.profile_updated, name='profile_updated'),
 ]
 
