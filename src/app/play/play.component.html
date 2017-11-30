@@ -1,0 +1,82 @@
+<layout-header></layout-header>
+<div class="contentContainer">
+	<div class="container">
+		<div class="playContent row">
+			<div class="col-md-9">
+				<div class="game_title">
+					<h3 class="">Play game</h3>
+				</div>
+				<div class="playGame">
+					<!-- start game -->
+					<div *ngIf="!end_game && !active_question" class="startGame">
+						<a class="btn btn-primary animated rotateIn" (click)="startGame()" ><i class="fa fa-hand-o-right animated zoomIn" style="margin-right: 7px;"></i>PLAY</a>
+					</div>
+					<!-- play game -->
+					<div *ngIf="active_question && !end_game" class="answerGame" >
+						<!-- <h3 [hidden]="!active_question" class="title_question animated zoomIn">{{ question.title }}</h3> -->
+						<div [hidden]="!active_question" class="img_question animated zoomIn">
+							<img class="img-thumbnail" src="./assets/images/{{ question.image }}" style="width: 100%;">
+						</div>
+						<div [hidden]="!active_question" class="answer_question animated flipInX">
+							<!-- <div *ngFor="let item of show_question" style="display: inline-block;">
+								<input [hidden]="(item == 'space')" type="text" name="answer" maxlength="1" value="{{item}}" >
+								<p [hidden]="item != 'space' " class="text_space" ></p> -->
+								<div *ngFor="let item of show_input" style="display: inline-block; margin: 0 10px;">
+									<div *ngFor="let obj of item.split('')" style="display: inline-block;">
+										<input type="text" name="answer" maxlength="1" value="{{obj}}" disabled="disabled" >
+										<!-- <p [hidden]="item != 'space' " class="text_space" ></p> -->
+									</div>
+								</div>
+							</div>
+							<div [hidden]="!active_question" class="form-group answer_text animated zoomIn">
+								<input type="text" name="answer" [(ngModel)]="data.answer" >
+							</div>
+							<div [hidden]="!active_question" class="submit_question animated flip">
+								<a class="btn btn-primary" (click)="answer()" >Submit</a>
+							</div>
+							<div [hidden]="!active_question" class="scores animated rotateInUpLeft">
+								<p>Score: <span>{{ score }}</span></p>
+							</div>
+							<!-- clock -->
+							<div class="clock animated flip">
+								<h3 class="" [hidden]="ticks >= 29" >{{ticks}}</h3>
+								<h3 class="clock_end" [hidden]="ticks < 29" >{{ticks}}</h3>
+							</div>
+						</div>
+						<!-- end game -->
+						<div [hidden]="!end_game" class="endGame">
+							<div [hidden]="!end_game" class="end_game_img animated zoomIn">
+								<img src="./assets/images/end_game.jpeg" class="img-thumbnail img-circle ">
+							</div>
+							<div [hidden]="!end_game" class="end_score animated flash">
+								<h3>Score : {{ score }}</h3>
+							</div>
+							<div class="play_again">
+								<a [hidden]="!end_game" class="btn btn-success animated rotateIn" (click)="play_again()" ><i class="fa fa-refresh" style="margin-right: 7px;"></i>Play agian</a>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-3">
+					<div class="game_title">
+						<h3 style="width: 100%; text-align: center;">Top Score</h3>
+					</div>
+					<div class="rating">
+						<div *ngFor="let obj of list_top_score" class="media animated bounceIn">
+							<div class="media-left">
+								<a routerLink="/view-profile/{{obj.id}}">
+									<img class="media-object img-circle img-thumbnail" src="./assets/images/{{ obj.avatar }}" alt="{{ obj.username }}" style="width: 100%;">
+								</a>
+							</div>
+							<div class="media-body">
+								<h4 class="media-heading">{{ obj.username }}</h4>
+								<p>Score: <span>{{ obj.score }}</span></p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<layout-footer></layout-footer>

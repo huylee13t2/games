@@ -1,0 +1,37 @@
+<layout-header></layout-header>
+
+<div class="historyContainer contentContainer">
+	<div class="container">
+		
+		<div class="game_title">
+			<h3>History</h3>
+		</div>
+		<div class="content">
+			<ul class="nav navbar-nav">
+				<li class="row" *ngFor="let item of history" style="width: 100%;">
+					<span class="col-md-4 date">Date : {{ item.updated |date:'dd/MM/yyyy' }}</span>
+					<span class="col-md-4 date">Time : {{ item.updated |date:'HH:mm' }}</span>
+					<span class="col-md-4 score">Score : {{ item.score }}</span>
+				</li>
+			</ul>
+		</div>
+		<!-- <table class="table table-hover table-striped">
+			<thead>
+				<tr>
+					<th>Score</th>
+					<th>Time</th>
+					<th>Date</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr *ngFor="let item of history">
+					<th>{{ item.score }}</th>
+					<td>{{ item.updated |date:'HH:mm' }}</td>
+					<td>{{ item.updated |date:'dd/MM/yyyy' }}</td>
+				</tr>
+			</tbody>
+		</table> -->
+	</div>
+</div>
+
+<layout-footer></layout-footer>

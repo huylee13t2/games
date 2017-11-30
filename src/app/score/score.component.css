@@ -1,0 +1,45 @@
+.historyContainer{
+
+}
+.game_title{
+	margin: 0;
+	border-bottom: 2px solid #256946;
+	width: 100%;
+	margin-bottom: 12px;
+}
+.game_title >h3{
+	margin: 0;
+	background: #3aa26d;
+	display: inline-block;
+	padding: 12px 15px;
+	border-radius: 7px 7px 0 0;
+	color: #fff;
+	text-transform: uppercase;
+}
+.content{
+
+}
+.content >ul{
+	margin: 0;
+	padding: 0;
+	width: 100%;
+}
+.content >ul >li{
+	margin: 0;
+	background: #fff;
+	padding: 7px 15px;
+	margin-bottom: 7px;
+	border-radius: 4px;
+}
+.content >ul >li >span{
+	
+}
+.content >ul >li >span.date{
+	
+}
+.content >ul >li >span.score{
+	/*background: #3aa26d;
+	border-radius: 5px;
+	padding: 5px 7px;
+	display: inline-block;*/
+}

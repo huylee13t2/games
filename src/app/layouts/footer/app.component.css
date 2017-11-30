@@ -1,0 +1,32 @@
+.footerContainer{
+	background: #801b1b;
+	padding: 7px 0;
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+}
+.ft_left{
+
+}
+.ft_left >p{
+	margin: 0;
+	color: #fff;
+}
+.ft_right >ul{
+	padding: 14px 0;
+}
+.ft_right >ul >li{
+
+}
+.ft_right >ul >li >a{
+	color: #fff;
+	padding: 0px 10px;
+	border-right: 1px solid #fff;
+}
+.ft_right >ul >li:first-child >a{
+	border-left: 1px solid #fff;
+}
+.ft_right >ul >li >a:hover{
+
+}
