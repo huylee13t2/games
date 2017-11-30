@@ -39,6 +39,16 @@ def profile_updated(request):
 
 	response = {
 		'result' : profile.id,
+		'data' : {
+			'id' : profile.user.id,
+			'username' : profile.user.username,
+			'email' : profile.user.email,
+			'avatar' : profile.avatar.name,
+			'fullname' : profile.fullname,
+			'phone' : profile.phone,
+			'city'  :profile.city,
+			'gender'  :profile.gender
+		}
 	}
 
 	return JsonResponse(response)
